@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Recharge INWI</string>
+    <string name="back">RETOUR</string>
+    <string name="home">Accueil</string>
+    <string name="contacts">Tous les contacts</string>
+    <string name="contacts_btn">Contacts</string>
+    <string name="settings">Paramètres</string>
+    <string name="saved">Paramètres enregistrés</string>
+    <string name="back_param">Paramètre non enregistré</string>
+    <string name="invalid_number">Numéro invalide</string>
+    <string name="void_field">Champs vide</string>
+    <string name="treatment">Traitement ...</string>
+    <string name="number_here">Numéro ici</string>
+    <string name="send">Envoyer</string>
+    <string name="backagain">Appuyer de nouveau pour quitter</string>
+    <string name="hint_code">Code ici</string>
+
+    <string name="feedback1">Recharge</string>
+    <string name="feedback2">Recharge-Moi</string>
+</resources>
