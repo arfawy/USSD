@@ -43,7 +43,7 @@ public class ButtonListener implements View.OnClickListener {
                     String myNumber;
                     if(!editNum.getText().toString().isEmpty()){
                         myNumber = editNum.getText().toString();
-                        if(!PhoneMetier.isMorocco(myNumber)) Toast.makeText(context,R.string.invalid_number, Toast.LENGTH_SHORT).show();
+                        if(!PhoneMetier.isNationalNumber(myNumber)) Toast.makeText(context,R.string.invalid_number, Toast.LENGTH_SHORT).show();
                         else{
                             myNumber = PhoneMetier.normalize(myNumber);
                             String str = context.getResources().getString(R.string.treatment);

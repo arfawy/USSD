@@ -1,7 +1,6 @@
 package km.arfawy.android.ussd.activity;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -29,7 +28,7 @@ public class ContactsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_contacts);
         cname_lv = (ListView)findViewById(R.id.listview_cname);
 
-        ArrayList<Contact> cts = PhoneMetier.moroccoContacts(this);
+        ArrayList<Contact> cts = PhoneMetier.getContacts(this);
 
         ContactAdapter adapter = new ContactAdapter(cts,this);
         cname_lv.setAdapter(adapter);

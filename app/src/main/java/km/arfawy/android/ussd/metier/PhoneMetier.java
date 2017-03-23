@@ -1,7 +1,6 @@
 package km.arfawy.android.ussd.metier;
 
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -15,27 +14,32 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import km.arfawy.android.ussd.models.Contact;
+import km.arfawy.android.ussd.models.Country;
 
 public class PhoneMetier {
+    static Country country = new Country("Morroco", 10 , "00212", "212");
     private static final int MY_PERMISSIONS_REQUEST = 10;
 
-    public static boolean isMorocco(String number){
+    public static boolean isNationalNumber(String number){
         number = normalize(number);
-        if(number.startsWith("002125"))  return false;
-        if(number.startsWith("2125"))  return false;
-
-        if(number.startsWith("00212")&& number.length()==14) return true;
-        if(number.startsWith("212")&& number.length()==12) return true;
-        if(number.startsWith("06") && number.length()==10)	return true;
-        if(number.startsWith("07") && number.length()==10) return true;
+        if(number.length() == country.getMinDigit()) return true;
+        String [] starts = country.getStarts();
+        for (int i = 0; i < starts.length; i++) {
+            if(number.startsWith(country.getStarts()[i])
+            && number.length() == starts[i].length() + country.getMinDigit() - 1)
+                return true;
+        }
         return false;
     }
 
     public static String simpleNumber(String number){
         number = normalize(number);
-        if (!isMorocco(number))return null;
-        if(number.startsWith("00212")) return "0" + number.substring(5,number.length());
-        if(number.startsWith("212")) return "0" + number.substring(3,number.length());
+        if (!isNationalNumber(number)) return null;
+        if(number.length() == country.getMinDigit()) return number;
+        for (int i = 0; i < country.getStarts().length; i++) {
+            if(number.startsWith(country.getStarts()[i]))
+                return "0" + number.substring(country.getStarts()[i].length(), number.length());
+        }
         return null;
     }
 
@@ -64,7 +68,7 @@ public class PhoneMetier {
         return false;
     }
 
-    public static ArrayList<Contact> moroccoContacts(Context context){
+    public static ArrayList<Contact> getContacts(Context context){
         ArrayList<Contact> cts = new ArrayList<>();
         ContentResolver resolver = context.getContentResolver();
         Cursor cursor = resolver.query(ContactsContract.Contacts.CONTENT_URI, null, null,null, null);
