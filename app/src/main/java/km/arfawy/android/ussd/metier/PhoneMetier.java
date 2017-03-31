@@ -15,33 +15,11 @@ import java.util.Comparator;
 
 import km.arfawy.android.ussd.models.Contact;
 import km.arfawy.android.ussd.models.Country;
+import km.arfawy.android.ussd.models.InwiMoroccoCountry;
 
 public class PhoneMetier {
-    static Country country = new Country("Morroco", 10 , "00212", "212");
-    private static final int MY_PERMISSIONS_REQUEST = 10;
-
-    public static boolean isNationalNumber(String number){
-        number = normalize(number);
-        if(number.length() == country.getMinDigit()) return true;
-        String [] starts = country.getStarts();
-        for (int i = 0; i < starts.length; i++) {
-            if(number.startsWith(country.getStarts()[i])
-            && number.length() == starts[i].length() + country.getMinDigit() - 1)
-                return true;
-        }
-        return false;
-    }
-
-    public static String simpleNumber(String number){
-        number = normalize(number);
-        if (!isNationalNumber(number)) return null;
-        if(number.length() == country.getMinDigit()) return number;
-        for (int i = 0; i < country.getStarts().length; i++) {
-            if(number.startsWith(country.getStarts()[i]))
-                return "0" + number.substring(country.getStarts()[i].length(), number.length());
-        }
-        return null;
-    }
+    protected static Country country = new InwiMoroccoCountry();
+    private final static int MY_PERMISSIONS_REQUEST = 10;
 
     public static String normalize(String number){
 
@@ -83,7 +61,8 @@ public class PhoneMetier {
             );
             while(phoneCursor.moveToNext()){
                 String number = phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                number = PhoneMetier.simpleNumber(number);
+                //number = PhoneMetier.simpleNumber(number);
+                number = country.simpleNumber(number);
                 if(number!= null && !ct.getNumbres().contains(number)) ct.add(number);
             }
             if(ct.getNumbres().size()!=0) cts.add(ct);

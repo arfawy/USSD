@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new ItemSelectedListener(this));
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.home, menu);

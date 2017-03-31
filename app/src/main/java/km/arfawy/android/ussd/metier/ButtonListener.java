@@ -11,10 +11,13 @@ import android.widget.Toast;
 
 import km.arfawy.android.ussd.R;
 import km.arfawy.android.ussd.activity.ContactsActivity;
+import km.arfawy.android.ussd.models.Country;
+import km.arfawy.android.ussd.models.InwiMoroccoCountry;
 
 public class ButtonListener implements View.OnClickListener {
 
     Context context;
+    Country country = new InwiMoroccoCountry();
 
     public ButtonListener(Context context){
         this.context = context;
@@ -40,30 +43,31 @@ public class ButtonListener implements View.OnClickListener {
 
                     EditText editNum = (EditText)((Activity)context).findViewById(R.id.edit_num);
                     EditText editCode = (EditText)((Activity)context).findViewById(R.id.edit_code);
-                    String myNumber;
+                    String ussdCode = null;
+                    //Recharge-Moi
                     if(!editNum.getText().toString().isEmpty()){
-                        myNumber = editNum.getText().toString();
-                        if(!PhoneMetier.isNationalNumber(myNumber)) Toast.makeText(context,R.string.invalid_number, Toast.LENGTH_SHORT).show();
+                        String number = editNum.getText().toString();
+                        if(!country.isNationalNumber(number)) Toast.makeText(context,R.string.invalid_number, Toast.LENGTH_SHORT).show();
                         else{
-                            myNumber = PhoneMetier.normalize(myNumber);
+                            number = PhoneMetier.normalize(number);
                             String str = context.getResources().getString(R.string.treatment);
-                            Toast.makeText(context, str + myNumber, Toast.LENGTH_SHORT).show();
-                            String ussdCode = "*120*21*" + myNumber + Uri.encode("#");
-                            ((Activity)context).startActivity(new Intent("android.intent.action.CALL", Uri.parse("tel:" + ussdCode)));
+                            Toast.makeText(context, str + number, Toast.LENGTH_SHORT).show();
+                            ussdCode = country.getRecharge_request().replace("xxx", number);
                         }
                     }
+                    //Recharge
                     if(!editCode.getText().toString().isEmpty()){
-                        myNumber = editCode.getText().toString();
-                        if(myNumber.length()==16){
-                            String ussdCode = "*120*20*" + myNumber + Uri.encode("#");
-                            ((Activity)context).startActivity(new Intent("android.intent.action.CALL", Uri.parse("tel:" + ussdCode)));
+                        String code = editCode.getText().toString();
+                        if(code.length()==16){
+                            ussdCode = country.getPrepaid_recharge().replace("xxx", code);
                         }
                         else Toast.makeText(context, R.string.invalid_number, Toast.LENGTH_SHORT).show();
 
                     }
                     if (editNum.getText().toString().isEmpty() && editCode.getText().toString().isEmpty())
                         Toast.makeText(context, R.string.void_field, Toast.LENGTH_SHORT).show();
-
+                    //Execution USSD
+                    if(!ussdCode.isEmpty()) ((Activity)context).startActivity(new Intent("android.intent.action.CALL", Uri.parse("tel:" + ussdCode)));
                 }
                 break;
         }
