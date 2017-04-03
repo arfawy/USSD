@@ -15,11 +15,29 @@ import java.util.Comparator;
 
 import km.arfawy.android.ussd.models.Contact;
 import km.arfawy.android.ussd.models.Country;
-import km.arfawy.android.ussd.models.InwiMoroccoCountry;
+import km.arfawy.android.ussd.models.CountryFactory;
 
-public class PhoneMetier {
-    protected static Country country = new InwiMoroccoCountry();
+public class PhoneMetier{
+
+    private CountryFactory factory;
+    private Country country;
+
     private final static int MY_PERMISSIONS_REQUEST = 10;
+
+    public PhoneMetier(){
+        try {
+            String classname = "InwiMoroccoFactory";
+            factory = (CountryFactory)Class.forName("km.arfawy.android.ussd.models." + classname).newInstance();
+            country = factory.getInstance();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public Country getCountry() {
+        return country;
+    }
 
     public static String normalize(String number){
 
@@ -46,7 +64,7 @@ public class PhoneMetier {
         return false;
     }
 
-    public static ArrayList<Contact> getContacts(Context context){
+    public ArrayList<Contact> getContacts(Context context){
         ArrayList<Contact> cts = new ArrayList<>();
         ContentResolver resolver = context.getContentResolver();
         Cursor cursor = resolver.query(ContactsContract.Contacts.CONTENT_URI, null, null,null, null);
@@ -78,7 +96,7 @@ public class PhoneMetier {
         });
         return cts;
     }
-    public static boolean permission(Context context, String PERMISSION_TYPE){
+    public boolean permission(Context context, String PERMISSION_TYPE){
         if(ActivityCompat.checkSelfPermission(context, PERMISSION_TYPE)!= PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions((Activity)context, new String[]{PERMISSION_TYPE},MY_PERMISSIONS_REQUEST);
         }

@@ -16,6 +16,7 @@ import km.arfawy.android.ussd.adapter.ContactAdapter;
 
 public class ContactsActivity extends AppCompatActivity {
     ListView cname_lv;
+    PhoneMetier metier = new PhoneMetier();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,7 +29,7 @@ public class ContactsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_contacts);
         cname_lv = (ListView)findViewById(R.id.listview_cname);
 
-        ArrayList<Contact> cts = PhoneMetier.getContacts(this);
+        ArrayList<Contact> cts = metier.getContacts(this);
 
         ContactAdapter adapter = new ContactAdapter(cts,this);
         cname_lv.setAdapter(adapter);

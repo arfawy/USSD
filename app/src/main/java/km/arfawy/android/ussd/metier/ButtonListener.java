@@ -12,12 +12,12 @@ import android.widget.Toast;
 import km.arfawy.android.ussd.R;
 import km.arfawy.android.ussd.activity.ContactsActivity;
 import km.arfawy.android.ussd.models.Country;
-import km.arfawy.android.ussd.models.InwiMoroccoCountry;
 
 public class ButtonListener implements View.OnClickListener {
 
     Context context;
-    Country country = new InwiMoroccoCountry();
+    PhoneMetier metier = new PhoneMetier();
+    Country country = metier.getCountry();
 
     public ButtonListener(Context context){
         this.context = context;
@@ -28,7 +28,7 @@ public class ButtonListener implements View.OnClickListener {
 
         switch (v.getId()){
             case R.id.btn_browse:
-                if(PhoneMetier.permission(context, Manifest.permission.READ_CONTACTS)){
+                if(metier.permission(context, Manifest.permission.READ_CONTACTS)){
                     Intent i = new Intent(context, ContactsActivity.class);
                     context.startActivity(i);
                 }
@@ -39,7 +39,7 @@ public class ButtonListener implements View.OnClickListener {
                 break;
 
             case R.id.btn_send:
-                if(PhoneMetier.permission(context, Manifest.permission.CALL_PHONE)){
+                if(metier.permission(context, Manifest.permission.CALL_PHONE)){
 
                     EditText editNum = (EditText)((Activity)context).findViewById(R.id.edit_num);
                     EditText editCode = (EditText)((Activity)context).findViewById(R.id.edit_code);
@@ -49,7 +49,7 @@ public class ButtonListener implements View.OnClickListener {
                         String number = editNum.getText().toString();
                         if(!country.isNationalNumber(number)) Toast.makeText(context,R.string.invalid_number, Toast.LENGTH_SHORT).show();
                         else{
-                            number = PhoneMetier.normalize(number);
+                            number = metier.normalize(number);
                             String str = context.getResources().getString(R.string.treatment);
                             Toast.makeText(context, str + number, Toast.LENGTH_SHORT).show();
                             ussdCode = country.getRecharge_request().replace("xxx", number);
@@ -62,12 +62,11 @@ public class ButtonListener implements View.OnClickListener {
                             ussdCode = country.getPrepaid_recharge().replace("xxx", code);
                         }
                         else Toast.makeText(context, R.string.invalid_number, Toast.LENGTH_SHORT).show();
-
                     }
                     if (editNum.getText().toString().isEmpty() && editCode.getText().toString().isEmpty())
                         Toast.makeText(context, R.string.void_field, Toast.LENGTH_SHORT).show();
                     //Execution USSD
-                    if(!ussdCode.isEmpty()) ((Activity)context).startActivity(new Intent("android.intent.action.CALL", Uri.parse("tel:" + ussdCode)));
+                    if(ussdCode != null) context.startActivity(new Intent("android.intent.action.CALL", Uri.parse("tel:" + ussdCode)));
                 }
                 break;
         }

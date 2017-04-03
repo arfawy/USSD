@@ -8,6 +8,7 @@ public abstract class Country {
     protected String recharge_request;
     protected String prepaid_recharge;
     protected String transfert;
+    public static Country country = null;
 
     public abstract boolean isNationalNumber(String number);
     public abstract String simpleNumber(String number);
